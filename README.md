@@ -26,8 +26,10 @@ Trade id is used as the key for the Hashmap and the trades with same trade id an
 Thee are two public methods to the store appliaction : 
 
 1. Store the Trade Entry
+
    public boolean addToStore(Trade newTradeEntry)
 
 2. Get the trade entries for the given trade is
+
    public List<Trade> getTrades (String tradeId)
 
