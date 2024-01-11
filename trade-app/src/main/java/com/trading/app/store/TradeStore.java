@@ -1,6 +1,7 @@
 package com.trading.app.store;
 
 import com.trading.app.entity.Trade;
+import src.main.java.com.trading.app.store.TradeException;
 
 import java.util.*;
 
@@ -8,7 +9,7 @@ public class TradeStore {
 
     Map<String, List<Trade>> tradeStore = new HashMap<>();
 
-    public boolean addToStore(Trade newTradeEntry) {
+    public boolean addToStore(Trade newTradeEntry) throws TradeException {
 
         // check if trade id or the version is null
         if(newTradeEntry.getTradeId().isEmpty() ) {
@@ -31,9 +32,11 @@ public class TradeStore {
         } else {
             List<Trade> tradeList = tradeStore.get(newTradeEntry.getTradeId());
 
-            // Check if the version of this new trade is lower
+            // Check if the version of this new trade is lower,
+            // then throw the TradeException
             if(isLowerversion(tradeList, newTradeEntry)) {
-                return  false;
+                throw new TradeException("Lower version not allowed for Trade");
+                //return  false;
             }
 
             //  if the trade with same version exists, then override that trade

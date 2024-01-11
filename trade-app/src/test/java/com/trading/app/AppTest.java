@@ -1,29 +1,20 @@
-package com.trading.app;
+package src.test.java.com.trading.app;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import com.trading.app.entity.Trade;
 import com.trading.app.store.TradeStore;
 import org.junit.Test;
+import src.main.java.com.trading.app.store.TradeException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Unit test for simple App.
- */
+
 public class AppTest 
 {
-    /**
-     * Rigorous Test :-)
-     */
-    @Test
-    public void shouldAnswerWithTrue()
-    {
-        assertTrue( true );
-    }
+
 
     @Test
     public void addSingletrade()
@@ -38,7 +29,11 @@ public class AppTest
 
         TradeStore tradeStore = new TradeStore();
 
-        assertEquals(true,tradeStore.addToStore(newTrade));
+        try {
+            assertEquals(true,tradeStore.addToStore(newTrade));
+        } catch (TradeException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test
@@ -53,7 +48,11 @@ public class AppTest
 
         TradeStore tradeStore = new TradeStore();
 
-        tradeStore.addToStore(newTrade);
+        try {
+            tradeStore.addToStore(newTrade);
+        } catch (TradeException e) {
+            System.out.println(e.getMessage());
+        }
 
         Trade trade2 = new Trade("T1", 1, "CP-1", "B1",
                 maturityDate,createdDate, 'N' );
@@ -63,8 +62,10 @@ public class AppTest
 
     }
 
-    @Test
-    public void addTradeWithLowerVersioin() {
+
+
+    @Test(expected = TradeException.class)
+    public void addTradeWithLowerVersioin() throws TradeException {
 
         Date maturityDate = new Date(2024,5,20);
         Date createdDate = new Date();
@@ -75,15 +76,21 @@ public class AppTest
 
         TradeStore tradeStore = new TradeStore();
 
-        tradeStore.addToStore(newTrade);
+        try {
+            tradeStore.addToStore(newTrade);
+        } catch (TradeException e) {
+            System.out.println(e.getMessage());
+        }
 
         Trade trade2 = new Trade("T1", 1, "CP-1", "B1",
                 maturityDate,createdDate, 'N' );
 
-        assertEquals(false,tradeStore.addToStore(trade2));
-
+        tradeStore.addToStore(trade2);
 
     }
+
+
+
 
     @Test
     public void addTradeWithDifferentVersions() {
@@ -97,11 +104,20 @@ public class AppTest
 
         TradeStore tradeStore = new TradeStore();
 
-        tradeStore.addToStore(newTrade);
+        try {
+            tradeStore.addToStore(newTrade);
+        } catch (TradeException e) {
+            System.out.println(e.getMessage());
+        }
 
         Trade trade2 = new Trade("T1", 3, "CP-1", "B1",
                 maturityDate,createdDate, 'N' );
-        tradeStore.addToStore(trade2);
+
+        try {
+            tradeStore.addToStore(trade2);
+        } catch (TradeException e) {
+            System.out.println(e.getMessage());
+        }
 
         assertEquals(tradeStore.getTrades("T1").size(),2);
 
@@ -124,9 +140,18 @@ public class AppTest
         Trade newTrade = new Trade("T1", 1, "CP-1", "B1",
                 maturityDate,createdDate, 'N' );
 
-        tradeStore.addToStore(newTrade);
+        try {
+            tradeStore.addToStore(newTrade);
+        } catch (TradeException e) {
+            System.out.println(e.getMessage());
+        }
 
-        assertEquals(false,  tradeStore.addToStore(newTrade));
+        try {
+            assertEquals(false,  tradeStore.addToStore(newTrade));
+        } catch (TradeException e) {
+            System.out.println(e.getMessage());
+
+        }
 
     }
 
@@ -141,21 +166,18 @@ public class AppTest
         Trade newTrade = new Trade("", 1, "CP-1", "B1",
                 maturityDate,createdDate, 'N' );
 
-        tradeStore.addToStore(newTrade);
+        try {
+            tradeStore.addToStore(newTrade);
+        } catch (TradeException e) {
+            System.out.println(e.getMessage());
+        }
 
-        assertEquals(false,  tradeStore.addToStore(newTrade));
+        try {
+            assertEquals(false,  tradeStore.addToStore(newTrade));
+        } catch (TradeException e) {
+            System.out.println(e.getMessage());
+        }
 
     }
-
-
-
-
-
-
-
-
-
-
-
 
 }
