@@ -2,6 +2,7 @@ package src.main.java.com.trading.app;
 
 import src.main.java.com.trading.app.store.TradeException;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 
@@ -12,8 +13,12 @@ public class App
 
         System.out.println( "Trading App started..." );
 
-        Date maturityDate = new Date(2024,5,20);
-        Date createdDate = new Date();
+        //Date maturityDate = new Date(2024,5,20);
+        //Date createdDate = new Date();
+
+        LocalDate maturityDate = LocalDate.of(2022, 1, 27);
+        LocalDate createdDate = LocalDate.now();
+
 
 
         com.trading.app.entity.Trade newTrade = new com.trading.app.entity.Trade("T1", 2, "CP-1", "B1",

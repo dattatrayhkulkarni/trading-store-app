@@ -9,6 +9,7 @@ import src.main.java.com.trading.app.store.TradeException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 
@@ -20,8 +21,8 @@ public class AppTest
     public void addSingletrade()
     {
 
-        Date maturityDate = new Date(2024,5,20);
-        Date createdDate = new Date();
+        LocalDate maturityDate = LocalDate.of(2024, 5, 20);
+        LocalDate createdDate = LocalDate.now();
 
 
         Trade newTrade = new Trade("T1", 1, "CP-1", "B1",
@@ -39,8 +40,9 @@ public class AppTest
     @Test
     public void addTradeWithSameVersion() {
 
-        Date maturityDate = new Date(2024,5,20);
-        Date createdDate = new Date();
+
+        LocalDate maturityDate = LocalDate.of(2024, 5, 20);
+        LocalDate createdDate = LocalDate.now();
 
 
         Trade newTrade = new Trade("T1", 1, "CP-1", "B1",
@@ -67,8 +69,8 @@ public class AppTest
     @Test(expected = TradeException.class)
     public void addTradeWithLowerVersioin() throws TradeException {
 
-        Date maturityDate = new Date(2024,5,20);
-        Date createdDate = new Date();
+        LocalDate maturityDate = LocalDate.of(2024, 5, 20);
+        LocalDate createdDate = LocalDate.now();
 
 
         Trade newTrade = new Trade("T1", 2, "CP-1", "B1",
@@ -95,8 +97,9 @@ public class AppTest
     @Test
     public void addTradeWithDifferentVersions() {
 
-        Date maturityDate = new Date(2024,5,20);
-        Date createdDate = new Date();
+
+        LocalDate maturityDate = LocalDate.of(2024, 5, 20);
+        LocalDate createdDate = LocalDate.now();
 
 
         Trade newTrade = new Trade("T1", 2, "CP-1", "B1",
@@ -126,14 +129,9 @@ public class AppTest
     @Test
     public void addTradeWithPreviousMaturityDate() {
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-dd");
-        Date  maturityDate = null;
-        try {
-            maturityDate = simpleDateFormat.parse("2010-01-09");
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        Date createdDate = new Date();
+
+        LocalDate maturityDate = LocalDate.of(2010, 5, 20);
+        LocalDate createdDate = LocalDate.now();
 
         TradeStore tradeStore = new TradeStore();
 
@@ -158,8 +156,8 @@ public class AppTest
     @Test
     public void addTradewithEmptyTradeId() {
 
-        Date maturityDate = new Date();
-        Date createdDate = new Date();
+        LocalDate maturityDate = LocalDate.of(2010, 5, 20);
+        LocalDate createdDate = LocalDate.now();
 
         TradeStore tradeStore = new TradeStore();
 
@@ -184,8 +182,8 @@ public class AppTest
     @Test
     public void testTradeExpiry() {
 
-        Date maturityDate = new Date();
-        Date createdDate = new Date();
+        LocalDate maturityDate =  LocalDate.now();
+        LocalDate createdDate = LocalDate.now();
 
         TradeStore tradeStore = new TradeStore();
 
@@ -198,7 +196,7 @@ public class AppTest
             System.out.println(e.getMessage());
         }
 
-        tradeStore.simulateExpiredTrade(new Date(2024,01,13));
+        tradeStore.simulateExpiredTrade(LocalDate.now().plusDays(10));
 
         assertEquals(1, tradeStore.getExpiredTradeCount());
 

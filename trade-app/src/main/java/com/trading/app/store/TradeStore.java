@@ -3,6 +3,7 @@ package com.trading.app.store;
 import com.trading.app.entity.Trade;
 import src.main.java.com.trading.app.store.TradeException;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class TradeStore {
@@ -17,7 +18,8 @@ public class TradeStore {
         }
 
         // Ingore the trade with previous maturity Date
-        if(newTradeEntry.getMaturityDate().before( new Date())) {
+        //if(newTradeEntry.getMaturityDate().before( new Date())) {
+        if(newTradeEntry.getMaturityDate().isBefore(LocalDate.now())) {
             return false;
         }
 
@@ -85,14 +87,14 @@ public class TradeStore {
     }
 
 
-    public void simulateExpiredTrade(Date todaysDate) {
+    public void simulateExpiredTrade(LocalDate todaysDate) {
 
         for (Map.Entry<String, List<Trade>> entry : tradeStore.entrySet() ) {
             List<Trade> tradeList = entry.getValue();
 
             int index = 0;
             for(Trade existingTrade : tradeList) {
-                if(existingTrade.getMaturityDate().before(todaysDate)) {
+                if(existingTrade.getMaturityDate().isBefore(todaysDate)) {
                     existingTrade.setExpired('Y');
                     tradeList.set(index, existingTrade);
                 }
