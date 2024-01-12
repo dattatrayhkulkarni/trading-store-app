@@ -84,4 +84,42 @@ public class TradeStore {
         return lowwerVersion;
     }
 
+
+    public void simulateExpiredTrade(Date todaysDate) {
+
+        for (Map.Entry<String, List<Trade>> entry : tradeStore.entrySet() ) {
+            List<Trade> tradeList = entry.getValue();
+
+            int index = 0;
+            for(Trade existingTrade : tradeList) {
+                if(existingTrade.getMaturityDate().before(todaysDate)) {
+                    existingTrade.setExpired('Y');
+                    tradeList.set(index, existingTrade);
+                }
+                index++;
+            }
+
+        }
+    }
+
+    public int getExpiredTradeCount() {
+
+        int expiredTradeCount = 0;
+
+        for(Map.Entry<String, List<Trade>> entey : tradeStore.entrySet()) {
+            List<Trade> tradeList = entey.getValue();
+
+            for(Trade existingTrade : tradeList) {
+                if(existingTrade.getExpired() == 'Y') {
+                    expiredTradeCount ++;
+                }
+            }
+        }
+
+        return expiredTradeCount;
+
+    }
+
+
+
 }

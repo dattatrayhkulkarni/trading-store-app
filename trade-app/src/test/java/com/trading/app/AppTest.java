@@ -180,4 +180,29 @@ public class AppTest
 
     }
 
+
+    @Test
+    public void testTradeExpiry() {
+
+        Date maturityDate = new Date();
+        Date createdDate = new Date();
+
+        TradeStore tradeStore = new TradeStore();
+
+        Trade newTrade = new Trade("T5", 1, "CP-1", "B1",
+                maturityDate,createdDate, 'N' );
+
+        try {
+            tradeStore.addToStore(newTrade);
+        } catch (TradeException e) {
+            System.out.println(e.getMessage());
+        }
+
+        tradeStore.simulateExpiredTrade(new Date(2024,01,13));
+
+        assertEquals(1, tradeStore.getExpiredTradeCount());
+
+    }
+
+
 }

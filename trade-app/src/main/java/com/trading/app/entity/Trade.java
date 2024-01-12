@@ -81,5 +81,9 @@ public class Trade {
     public int hashCode() {
         return Objects.hash(getTradeId(), getVersion(), getCounterPartyId(), getBookId(), getMaturityDate(), getCreatedDate(), getExpired());
     }
+
+    public void setExpired(char expired) {
+        this.expired = expired;
+    }
 }
 
