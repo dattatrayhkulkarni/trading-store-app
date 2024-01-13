@@ -203,4 +203,77 @@ public class AppTest
     }
 
 
+    @Test
+    public void testZeroTradeExpiry() {
+
+        LocalDate maturityDate =  LocalDate.now();
+        LocalDate createdDate = LocalDate.now();
+
+        TradeStore tradeStore = new TradeStore();
+
+        Trade trade1 = new Trade("T5", 1, "CP-1", "B1",
+                maturityDate,createdDate, 'N' );
+        Trade trade2 = new Trade("T6", 1, "CP-1", "B1",
+                maturityDate,createdDate, 'N' );
+        Trade trade3 = new Trade("T7", 1, "CP-1", "B1",
+                maturityDate,createdDate, 'N' );
+        Trade trade4 = new Trade("T8", 1, "CP-1", "B1",
+                maturityDate,createdDate, 'N' );
+        Trade trade5 = new Trade("T9", 1, "CP-1", "B1",
+                maturityDate,createdDate, 'N' );
+
+
+        try {
+            tradeStore.addToStore(trade1);
+            tradeStore.addToStore(trade2);
+            tradeStore.addToStore(trade3);
+            tradeStore.addToStore(trade4);
+            tradeStore.addToStore(trade5);
+        } catch (TradeException e) {
+            System.out.println(e.getMessage());
+        }
+
+        assertEquals(0, tradeStore.getExpiredTradeCount());
+
+    }
+
+
+    @Test
+    public void testMultipleTradeExpiry() {
+
+        LocalDate maturityDate =  LocalDate.now();
+        LocalDate createdDate = LocalDate.now();
+
+        TradeStore tradeStore = new TradeStore();
+
+        Trade trade1 = new Trade("T5", 1, "CP-1", "B1",
+                maturityDate,createdDate, 'N' );
+        Trade trade2 = new Trade("T6", 1, "CP-1", "B1",
+                maturityDate,createdDate, 'N' );
+        Trade trade3 = new Trade("T7", 1, "CP-1", "B1",
+                maturityDate,createdDate, 'N' );
+        Trade trade4 = new Trade("T8", 1, "CP-1", "B1",
+                maturityDate,createdDate, 'N' );
+        Trade trade5 = new Trade("T9", 1, "CP-1", "B1",
+                maturityDate,createdDate, 'N' );
+
+
+        try {
+            tradeStore.addToStore(trade1);
+            tradeStore.addToStore(trade2);
+            tradeStore.addToStore(trade3);
+            tradeStore.addToStore(trade4);
+            tradeStore.addToStore(trade5);
+        } catch (TradeException e) {
+            System.out.println(e.getMessage());
+        }
+
+        tradeStore.updateMaturityDate(trade1.getTradeId(),trade1.getVersion(), LocalDate.now().minusDays(1));
+
+        tradeStore.getTrades(trade1.getTradeId());
+
+        assertEquals(0, tradeStore.getExpiredTradeCount());
+
+    }
+
 }

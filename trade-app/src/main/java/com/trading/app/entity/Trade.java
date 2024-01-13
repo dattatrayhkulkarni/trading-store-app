@@ -93,5 +93,9 @@ public class Trade {
     public void setExpired(char expired) {
         this.expired = expired;
     }
+
+    public void setMaturityDate(LocalDate maturityDate) {
+        this.maturityDate = maturityDate;
+    }
 }
 

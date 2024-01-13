@@ -13,10 +13,8 @@ public class App
 
         System.out.println( "Trading App started..." );
 
-        //Date maturityDate = new Date(2024,5,20);
-        //Date createdDate = new Date();
 
-        LocalDate maturityDate = LocalDate.of(2022, 1, 27);
+        LocalDate maturityDate = LocalDate.of(2024, 1, 27);
         LocalDate createdDate = LocalDate.now();
 
 

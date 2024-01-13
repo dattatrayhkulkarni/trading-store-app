@@ -1,6 +1,8 @@
 package com.trading.app.store;
 
 import com.trading.app.entity.Trade;
+import src.main.java.com.trading.app.entity.TradeExpiry;
+import src.main.java.com.trading.app.store.ExpiryTradeStore;
 import src.main.java.com.trading.app.store.TradeException;
 
 import java.time.LocalDate;
@@ -10,7 +12,12 @@ public class TradeStore {
 
     Map<String, List<Trade>> tradeStore = new HashMap<>();
 
+    ExpiryTradeStore expiryTradeStore = new ExpiryTradeStore();
+
     public boolean addToStore(Trade newTradeEntry) throws TradeException {
+
+        // Update the Expired Trades
+        updateExpiryOfTrades();
 
         // check if trade id or the version is null
         if(newTradeEntry.getTradeId().isEmpty() ) {
@@ -30,6 +37,8 @@ public class TradeStore {
             tradeList.add(newTradeEntry);
 
             tradeStore.put(newTradeEntry.getTradeId(), tradeList);
+            expiryTradeStore.addToExpiryStore(newTradeEntry);
+
 
         } else {
             List<Trade> tradeList = tradeStore.get(newTradeEntry.getTradeId());
@@ -38,7 +47,6 @@ public class TradeStore {
             // then throw the TradeException
             if(isLowerversion(tradeList, newTradeEntry)) {
                 throw new TradeException("Lower version not allowed for Trade");
-                //return  false;
             }
 
             //  if the trade with same version exists, then override that trade
@@ -49,6 +57,8 @@ public class TradeStore {
                 if(existingTrade.getVersion() == newTradeEntry.getVersion()) {
                     sameVersion = true;
                     tradeList.set(index,newTradeEntry);
+                    // This needs special handling
+                    expiryTradeStore.addToExpiryStore(newTradeEntry);
                     break;
                 }
                 index++;
@@ -57,6 +67,7 @@ public class TradeStore {
             if(! sameVersion) {
                 tradeList.add(newTradeEntry);
                 tradeStore.put(newTradeEntry.getTradeId(), tradeList);
+                expiryTradeStore.addToExpiryStore(newTradeEntry);
             }
 
         }
@@ -65,6 +76,10 @@ public class TradeStore {
     }
 
     public List<Trade> getTrades (String tradeId) {
+
+        // Update the Expired Trades
+        updateExpiryOfTrades();
+
         List<Trade> tradeList = tradeStore.get(tradeId);
 
         return tradeList;
@@ -119,6 +134,60 @@ public class TradeStore {
         }
 
         return expiredTradeCount;
+
+    }
+
+    private void updateExpiryFlag(String tradeId, int version) {
+
+        List<Trade> tradeList = getTrades(tradeId);
+
+        int index =0;
+            for(Trade existingTrade : tradeList) {
+                if(existingTrade.getVersion() == version) {
+                    existingTrade.setExpired('Y');
+                    tradeList.set(index, existingTrade);
+                    break;
+                }
+                index++;
+            }
+
+        }
+
+    public void updateExpiryOfTrades() {
+
+        List<TradeExpiry> expiredTrades = expiryTradeStore.getExpiredTrades(LocalDate.now());
+
+        if(expiredTrades == null || expiredTrades.isEmpty()) {
+            return;
+        } else {
+            for (TradeExpiry expiredTradeEntry: expiredTrades) {
+
+                // Update the Expired flag in the Trade Store
+                String tradeId = expiredTradeEntry.getTradeId();
+                int version = expiredTradeEntry.getVersion();
+                updateExpiryFlag(tradeId,version);
+            }
+            // Since the flag for expired trades is set to Y, remove from the entries from expired trades store
+            expiryTradeStore.deleteExpiredTrades(LocalDate.now());
+
+        }
+    }
+
+
+    // This internal method is set the maturity date, so that  expiry of Trades can be simulated
+    public void updateMaturityDate(String tradeId, int version, LocalDate maturityDate) {
+
+        List<Trade> tradeList = getTrades(tradeId);
+
+        int index =0;
+        for(Trade existingTrade : tradeList) {
+            if(existingTrade.getVersion() == version) {
+                existingTrade.setMaturityDate(maturityDate);
+                tradeList.set(index, existingTrade);
+                break;
+            }
+            index++;
+        }
 
     }
 
