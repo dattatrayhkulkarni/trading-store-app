@@ -3,10 +3,7 @@ package src.main.java.com.trading.app.store;
 import src.main.java.com.trading.app.entity.TradeExpiry;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.trading.app.entity.Trade;
 
@@ -18,7 +15,7 @@ public class ExpiryTradeStore {
     Map<Long, List<TradeExpiry>> expiryStore;
 
     public ExpiryTradeStore() {
-        expiryStore = new HashMap<>();
+        expiryStore = new LinkedHashMap<>();
     }
 
     public void addToExpiryStore(Trade newTradeEntry) {
@@ -46,7 +43,23 @@ public class ExpiryTradeStore {
     }
 
     public List<TradeExpiry> getExpiredTrades(LocalDate expirydate) {
-        return expiryStore.get(expirydate.toEpochDay()-1);
+
+        // Need to get List of Trades which have expiry before today, not only yesterday
+
+        List<TradeExpiry> expiredTradeList = new ArrayList<>();
+
+
+        for(Map.Entry<Long, List<TradeExpiry>> entry : expiryStore.entrySet()) {
+
+            if(entry.getKey() < expirydate.toEpochDay()) {
+                expiredTradeList.addAll(entry.getValue());
+            }
+
+        }
+
+        //return expiryStore.get(expirydate.toEpochDay()-1);
+
+        return expiredTradeList;
     }
 
     public void  deleteExpiredTrades(LocalDate expirydate) {

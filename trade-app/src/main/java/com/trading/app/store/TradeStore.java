@@ -104,6 +104,20 @@ public class TradeStore {
 
     public void simulateExpiredTrade(LocalDate todaysDate) {
 
+        List<TradeExpiry> expiredTrades = expiryTradeStore.getExpiredTrades(todaysDate);
+
+        if(expiredTrades != null) {
+
+            for (TradeExpiry tradeExpiry : expiredTrades) {
+                updateExpiryFlag(tradeExpiry.getTradeId(), tradeExpiry.getVersion());
+            }
+
+            expiryTradeStore.deleteExpiredTrades(todaysDate);
+
+        }
+
+        /*
+
         for (Map.Entry<String, List<Trade>> entry : tradeStore.entrySet() ) {
             List<Trade> tradeList = entry.getValue();
 
@@ -117,6 +131,9 @@ public class TradeStore {
             }
 
         }
+
+
+         */
     }
 
     public int getExpiredTradeCount() {

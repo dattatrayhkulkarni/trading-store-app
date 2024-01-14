@@ -203,6 +203,7 @@ public class AppTest
     }
 
 
+
     @Test
     public void testZeroTradeExpiry() {
 
@@ -233,9 +234,13 @@ public class AppTest
             System.out.println(e.getMessage());
         }
 
+        tradeStore.simulateExpiredTrade(LocalDate.now());
+
         assertEquals(0, tradeStore.getExpiredTradeCount());
 
     }
+
+
 
 
     @Test
@@ -268,12 +273,12 @@ public class AppTest
             System.out.println(e.getMessage());
         }
 
-        tradeStore.updateMaturityDate(trade1.getTradeId(),trade1.getVersion(), LocalDate.now().minusDays(1));
+        tradeStore.simulateExpiredTrade(LocalDate.now().plusDays(10));
 
-        tradeStore.getTrades(trade1.getTradeId());
-
-        assertEquals(0, tradeStore.getExpiredTradeCount());
+        assertEquals(5, tradeStore.getExpiredTradeCount());
 
     }
+
+
 
 }
