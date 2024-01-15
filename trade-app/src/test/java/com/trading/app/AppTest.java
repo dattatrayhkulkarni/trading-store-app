@@ -7,10 +7,7 @@ import com.trading.app.store.TradeStore;
 import org.junit.Test;
 import src.main.java.com.trading.app.store.TradeException;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 
 
 public class AppTest 

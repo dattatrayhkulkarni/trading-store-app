@@ -57,8 +57,6 @@ public class ExpiryTradeStore {
 
         }
 
-        //return expiryStore.get(expirydate.toEpochDay()-1);
-
         return expiredTradeList;
     }
 

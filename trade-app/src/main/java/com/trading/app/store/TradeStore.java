@@ -25,7 +25,6 @@ public class TradeStore {
         }
 
         // Ingore the trade with previous maturity Date
-        //if(newTradeEntry.getMaturityDate().before( new Date())) {
         if(newTradeEntry.getMaturityDate().isBefore(LocalDate.now())) {
             return false;
         }
@@ -116,24 +115,7 @@ public class TradeStore {
 
         }
 
-        /*
 
-        for (Map.Entry<String, List<Trade>> entry : tradeStore.entrySet() ) {
-            List<Trade> tradeList = entry.getValue();
-
-            int index = 0;
-            for(Trade existingTrade : tradeList) {
-                if(existingTrade.getMaturityDate().isBefore(todaysDate)) {
-                    existingTrade.setExpired('Y');
-                    tradeList.set(index, existingTrade);
-                }
-                index++;
-            }
-
-        }
-
-
-         */
     }
 
     public int getExpiredTradeCount() {
